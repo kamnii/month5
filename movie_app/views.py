@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 # Create your views here.
-from .serializers import DirectorSerializer, MovieSerializer, ReviewSerializer
+from .serializers import DirectorSerializer, MovieSerializer, ReviewSerializer, MovieReviewSerializer
 from .models import Director, Movie, Review
 
 
@@ -62,5 +62,15 @@ def reviews_detail_view(request, **kwargs):
         review = Review.objects.get(id=kwargs['id'])
 
         serializer = ReviewSerializer(review, many=False)
+
+        return Response(data=serializer.data)
+
+
+@api_view(['GET'])
+def movies_reviews_view(request):
+    if request.method == 'GET':
+        movie = Movie.objects.all()
+
+        serializer = MovieReviewSerializer(movie, many=True)
 
         return Response(data=serializer.data)
